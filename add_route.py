@@ -1,15 +1,16 @@
 import yaml
 import json
-import sys 
+import sys
 
 args = sys.argv
 
 routes = ""
 gateway = ""
-netp_yaml = args[1]         
-dest_cidr = args[2]         
+netp_yaml = args[1]
+netp_bkup = f'{netp_yaml}.backup'
+dest_cidr = args[2]
 
-with open(netp_yaml) as file:
+with open(netp_bkup) as file:
     netplan = yaml.load(file)
     routes = netplan['network']['ethernets']['eth0']['routes']
 
@@ -20,6 +21,6 @@ for route in routes:
 newroute = f'{{ \"to\" : \"{dest_cidr}\" , \"via\" : \"{gateway}\" }}'
 netplan['network']['ethernets']['eth0']['routes'].append(json.loads(newroute))
 
-with open(r'/etc/netplan/00-networking.yaml', 'w') as file:
+with open(netp_yaml, 'w') as file:
     file.write(yaml.dump(netplan, default_flow_style=False))
 
