@@ -1,12 +1,15 @@
 import yaml
 import json
+import sys 
+
+args = sys.argv
 
 routes = ""
 gateway = ""
-dest_cidr = "172.18.0.0/18"
+netp_yaml = args[1]         
+dest_cidr = args[2]         
 
-# with open(r'/etc/netplan/50-cloud-init.yaml.backup') as file:
-with open(r'/etc/netplan/00-networking.yaml.backup') as file:
+with open(netp_yaml) as file:
     netplan = yaml.load(file)
     routes = netplan['network']['ethernets']['eth0']['routes']
 
